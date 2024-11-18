@@ -3,18 +3,24 @@ let dancer;
 let playButton;
 let fileInput;
 
+function preload() {
+    // Ensures that elements are selected after the page has loaded.
+    playButton = select('#playButton');
+    playButton.hide(); // Hide play button initially
+
+    fileInput = select('#fileInput');
+    fileInput.changed(handleFileSelect);
+}
+
 function setup() {
     createCanvas(600, 400);
     background(240);
 
-    // Initialize play button
-    playButton = select('#playButton');
+    // Play button
     playButton.mousePressed(togglePlay);
-    playButton.hide(); // Initially hidden, will show after the song is loaded
 
-    // Initialize file input for the song
-    fileInput = select('#fileInput');
-    fileInput.changed(handleFileSelect);
+    // Initially hide the play button
+    playButton.hide();
 }
 
 function draw() {
@@ -104,8 +110,3 @@ class Dancer {
         line(this.x - this.size / 2, this.y + this.size / 4, this.x + this.size / 2, this.y + this.size / 4);
     }
 }
-
-// Ensure that p5.js runs the setup function after the window has loaded
-window.onload = function() {
-    new p5();
-};
