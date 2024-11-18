@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dance Choreography Tool</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- First include p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    
+    <!-- Then include p5.sound.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js-sound/1.4.0/p5.sound.min.js"></script>
+
+</head>
+<body>
+    <h1>Dance Choreography Tool</h1>
+    <p>Upload a song and choreograph your moves!</p>
+    
+    <!-- File input for uploading music -->
+    <input type="file" id="fileInput" accept="audio/*">
+    
+    <!-- Play button (will be shown once song is loaded) -->
+    <button id="playButton" style="display:none;">Play</button>
+    
+    <!-- Add dancer button -->
+    <button id="addDancer">Add Dancer</button>
+
+    <!-- Appearance customization options -->
+    <div id="appearanceOptions">
+        <p>Select dancer appearance:</p>
+        <label>Skin Color: <input type="color" id="skinColor" value="#F5CBA7"></label><br>
+        <label>Shirt Color: <input type="color" id="shirtColor" value="#2980B9"></label><br>
+        <label>Pants Color: <input type="color" id="pantsColor" value="#1C2833"></label><br>
+        <label>Size: <input type="number" id="dancerSize" value="50" min="30" max="100"></label><br>
+    </div>
+
+    <!-- The canvas will display the dance moves -->
+    <div id="danceCanvas"></div>
+    
+    <!-- Link to the external script for logic -->
+    <script src="script.js"></script>
+</body>
+</html>
