@@ -5,23 +5,26 @@ let addDancerButton;
 let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
 
 function setup() {
-    let canvas = createCanvas(600, 400);
-    canvas.parent('danceCanvas');  // Attach the canvas to the div
+    createCanvas(600, 400);
     background(240);
 
+    // Play button setup
     playButton = createButton("Play");
-    playButton.position(10, 60);
+    playButton.position(10, 60);  // Adjust position
     playButton.mousePressed(togglePlay);
     playButton.hide();  // Initially hidden, will show after song is loaded
 
+    // Add Dancer button
     addDancerButton = select('#addDancer');
     addDancerButton.mousePressed(addDancer);
 
+    // Appearance controls
     skinColorPicker = select('#skinColor');
     shirtColorPicker = select('#shirtColor');
     pantsColorPicker = select('#pantsColor');
     dancerSizePicker = select('#dancerSize');
 
+    // File input handler
     let input = document.getElementById('fileInput');
     input.addEventListener('change', handleFileSelect, false);
 }
@@ -29,13 +32,14 @@ function setup() {
 function draw() {
     background(240);
 
+    // Draw and animate dancers
     dancers.forEach(dancer => {
         dancer.display();
         dancer.move();
     });
 }
 
-// File select handler (for loading music)
+// Handle file select for song loading
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
@@ -47,12 +51,12 @@ function handleFileSelect(event) {
     }
 }
 
-// Show play button after sound is loaded
+// Show play button after song is loaded
 function songLoaded() {
-    playButton.show();  // Show the play button when song is loaded
+    playButton.show();  // Show the play button when song is ready
 }
 
-// Play/Pause button toggle
+// Play/Pause functionality for the song
 function togglePlay() {
     if (song.isPlaying()) {
         song.pause();
@@ -73,7 +77,7 @@ function addDancer() {
     dancers.push(new Dancer(200, 200, size, skinColor, shirtColor, pantsColor));
 }
 
-// Dancer class (with customizable appearance)
+// Dancer class with customizable appearance and movement
 class Dancer {
     constructor(x, y, size, skinColor, shirtColor, pantsColor) {
         this.x = x;
@@ -86,31 +90,30 @@ class Dancer {
     }
 
     move() {
-        if (!song) return; // Ensure song is loaded before calling currentTime
-        let beat = song.currentTime();  // Sync movement with the song's current time
-        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5;  // Simple sway movement
+        let beat = song.currentTime(); 
+        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
 
-        // Make the dancer move left and right
+        // Make the dancer move left and right based on the song beat
         this.x = 300 + Math.sin(beat) * 150;
         this.y = 200 + Math.cos(beat) * 50;
     }
 
     display() {
-        fill(this.skinColor);
+        fill(this.skinColor);  // Skin color
         stroke(0);
 
-        // Head
+        // Draw the head
         ellipse(this.x, this.y - this.size / 2, this.size / 2);
 
-        // Body
-        fill(this.shirtColor);  // Shirt color
+        // Draw the body (shirt)
+        fill(this.shirtColor);
         rect(this.x - this.size / 4, this.y, this.size / 2, this.size);
 
-        // Legs (pants)
-        fill(this.pantsColor);  // Pants color
+        // Draw the legs (pants)
+        fill(this.pantsColor);
         rect(this.x - this.size / 4, this.y + this.size, this.size / 4, this.size);
 
-        // Arms
+        // Draw the arms (horizontal line)
         line(this.x - this.size / 2, this.y + this.size / 4, this.x + this.size / 2, this.y + this.size / 4);
     }
 }
