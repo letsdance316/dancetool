@@ -1,45 +1,31 @@
 let song;
-let dancers = [];
+let dancer;
 let playButton;
-let addDancerButton;
-let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
+let fileInput;
 
 function setup() {
     createCanvas(600, 400);
     background(240);
 
-    // Play button setup
-    playButton = createButton("Play");
-    playButton.position(10, 60);  // Adjust position
+    // Initialize play button
+    playButton = select('#playButton');
     playButton.mousePressed(togglePlay);
-    playButton.hide();  // Initially hidden, will show after song is loaded
+    playButton.hide(); // Initially hidden, will show after the song is loaded
 
-    // Add Dancer button
-    addDancerButton = select('#addDancer');
-    addDancerButton.mousePressed(addDancer);
-
-    // Appearance controls
-    skinColorPicker = select('#skinColor');
-    shirtColorPicker = select('#shirtColor');
-    pantsColorPicker = select('#pantsColor');
-    dancerSizePicker = select('#dancerSize');
-
-    // File input handler
-    let input = document.getElementById('fileInput');
-    input.addEventListener('change', handleFileSelect, false);
+    // Initialize file input for the song
+    fileInput = select('#fileInput');
+    fileInput.changed(handleFileSelect);
 }
 
 function draw() {
     background(240);
 
-    // Draw and animate dancers
-    dancers.forEach(dancer => {
+    if (dancer) {
         dancer.display();
         dancer.move();
-    });
+    }
 }
 
-// Handle file select for song loading
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
@@ -51,12 +37,11 @@ function handleFileSelect(event) {
     }
 }
 
-// Show play button after song is loaded
 function songLoaded() {
-    playButton.show();  // Show the play button when song is ready
+    playButton.show(); // Show the play button when song is loaded
 }
 
-// Play/Pause functionality for the song
+// Toggle play/pause
 function togglePlay() {
     if (song.isPlaying()) {
         song.pause();
@@ -67,17 +52,17 @@ function togglePlay() {
     }
 }
 
-// Add a dancer to the canvas
+// Add a dancer when the button is clicked
 function addDancer() {
-    let skinColor = skinColorPicker.value();
-    let shirtColor = shirtColorPicker.value();
-    let pantsColor = pantsColorPicker.value();
-    let size = dancerSizePicker.value();
+    let skinColor = select('#skinColor').value();
+    let shirtColor = select('#shirtColor').value();
+    let pantsColor = select('#pantsColor').value();
+    let size = select('#dancerSize').value();
 
-    dancers.push(new Dancer(200, 200, size, skinColor, shirtColor, pantsColor));
+    dancer = new Dancer(300, 200, size, skinColor, shirtColor, pantsColor);
 }
 
-// Dancer class with customizable appearance and movement
+// Dancer class (stick figure style)
 class Dancer {
     constructor(x, y, size, skinColor, shirtColor, pantsColor) {
         this.x = x;
@@ -90,32 +75,32 @@ class Dancer {
     }
 
     move() {
-        if (song && song.isLoaded()) {  // Check if song is loaded
-            let beat = song.currentTime(); 
+        if (song && song.isLoaded()) {
+            let beat = song.currentTime(); // Sync movement with the song's current time
             this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
 
-            // Make the dancer move left and right based on the song beat
+            // Move dancer left and right
             this.x = 300 + Math.sin(beat) * 150;
             this.y = 200 + Math.cos(beat) * 50;
         }
     }
 
     display() {
-        fill(this.skinColor);  // Skin color
+        fill(this.skinColor);
         stroke(0);
 
-        // Draw the head
+        // Head
         ellipse(this.x, this.y - this.size / 2, this.size / 2);
 
-        // Draw the body (shirt)
+        // Body
         fill(this.shirtColor);
         rect(this.x - this.size / 4, this.y, this.size / 2, this.size);
 
-        // Draw the legs (pants)
+        // Legs (pants)
         fill(this.pantsColor);
         rect(this.x - this.size / 4, this.y + this.size, this.size / 4, this.size);
 
-        // Draw the arms (horizontal line)
+        // Arms (line across)
         line(this.x - this.size / 2, this.y + this.size / 4, this.x + this.size / 2, this.y + this.size / 4);
     }
 }
