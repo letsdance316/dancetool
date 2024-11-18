@@ -1,19 +1,25 @@
 let song;
 let dancers = [];
 let playButton;
+let skinColor = "#F5CBA7";
+let shirtColor = "#2980B9";
+let pantsColor = "#1C2833";
+let dancerSize = 50;
 
 function setup() {
     createCanvas(600, 400);
     background(240);
 
-    // Create play button
-    playButton = createButton("Play");
-    playButton.position(10, 10);
+    // Create play button and hide it initially
+    playButton = select('#playButton');
     playButton.mousePressed(togglePlay);
+    
+    // File input to upload song
+    let input = select('#fileInput');
+    input.changed(handleFileSelect);
 
-    // Load file input
-    let input = createFileInput(handleFileSelect);
-    input.position(10, 40);
+    // Add Dancer button
+    select('#addDancer').mousePressed(addDancer);
 }
 
 function draw() {
@@ -26,19 +32,17 @@ function draw() {
     });
 }
 
-// Handle file selection for the audio
-function handleFileSelect(file) {
-    if (file.type === 'audio') {
-        song = loadSound(file.data, songLoaded);
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        song = loadSound(URL.createObjectURL(file), songLoaded);
     }
 }
 
-// Show the play button when the song is loaded
 function songLoaded() {
     playButton.show();
 }
 
-// Play/Pause the song
 function togglePlay() {
     if (song.isPlaying()) {
         song.pause();
@@ -49,7 +53,12 @@ function togglePlay() {
     }
 }
 
-// Dancer class to define a humanoid figure
+function addDancer() {
+    let dancer = new Dancer(300, 200, skinColor, shirtColor, pantsColor, dancerSize);
+    dancers.push(dancer);
+}
+
+// Dancer class to draw a humanoid figure
 class Dancer {
     constructor(x, y, skinColor, shirtColor, pantsColor, size) {
         this.x = x;
@@ -61,7 +70,6 @@ class Dancer {
         this.angle = 0;
     }
 
-    // Move the dancer in sync with the music
     move() {
         let beat = song.currentTime();
         this.angle += 0.05 + (beat % 2) * 0.01;
@@ -69,7 +77,6 @@ class Dancer {
         this.y = 200 + Math.cos(this.angle) * 100;
     }
 
-    // Display the dancer
     display() {
         push();  // Start a new drawing state
 
@@ -92,10 +99,4 @@ class Dancer {
 
         pop();  // End the drawing state
     }
-}
-
-// Add dancers when 'Add Dancer' button is pressed
-function mousePressed() {
-    // Example of adding a dancer with default appearance
-    dancers.push(new Dancer(200, 200, "#F5CBA7", "#2980B9", "#1C2833", 50));
 }
