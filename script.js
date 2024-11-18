@@ -104,3 +104,8 @@ class Dancer {
         line(this.x - this.size / 2, this.y + this.size / 4, this.x + this.size / 2, this.y + this.size / 4);
     }
 }
+
+// Ensure that p5.js runs the setup function after the window has loaded
+window.onload = function() {
+    new p5();
+};
