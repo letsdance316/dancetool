@@ -5,9 +5,9 @@ let addDancerButton;
 let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
 
 function setup() {
-    // Create canvas and append it to the 'danceCanvas' div in the HTML
+    // Create the canvas inside the 'danceCanvas' div
     let canvas = createCanvas(600, 400);
-    canvas.parent('danceCanvas');  // Attach the canvas to the div with id 'danceCanvas'
+    canvas.parent('danceCanvas');  // Attach canvas to the div
     background(240);
 
     // Play button
@@ -55,7 +55,6 @@ function handleFileSelect(event) {
 
 // Show play button after sound is loaded
 function songLoaded() {
-    console.log("Song Loaded!");  // Log to confirm song is loaded
     playButton.show();  // Show the play button when song is loaded
 }
 
@@ -77,7 +76,6 @@ function addDancer() {
     let pantsColor = pantsColorPicker.value();
     let size = dancerSizePicker.value();
 
-    console.log('Adding Dancer:', skinColor, shirtColor, pantsColor, size);  // Log to confirm dancer creation
     dancers.push(new Dancer(200, 200, size, skinColor, shirtColor, pantsColor));
 }
 
@@ -104,8 +102,6 @@ class Dancer {
     }
 
     display() {
-        console.log("Displaying Dancer at:", this.x, this.y);  // Log position to ensure dancer is drawn
-
         fill(this.skinColor);  // Skin color
         stroke(0);
 
