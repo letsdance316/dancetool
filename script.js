@@ -5,8 +5,9 @@ let addDancerButton;
 let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
 
 function setup() {
-    // Create canvas
-    createCanvas(600, 400);
+    // Create canvas and append it to the 'danceCanvas' div in the HTML
+    let canvas = createCanvas(600, 400);
+    canvas.parent('danceCanvas');  // Attach the canvas to the div with id 'danceCanvas'
     background(240);
 
     // Play button
