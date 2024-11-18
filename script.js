@@ -1,63 +1,44 @@
 let song;
 let dancers = [];
 let playButton;
-let addDancerButton;
-let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
 
 function setup() {
-    // Create canvas
     createCanvas(600, 400);
     background(240);
 
-    // Play button
+    // Create play button
     playButton = createButton("Play");
-    playButton.position(10, 60);  // Adjusted position to make sure it's visible
+    playButton.position(10, 10);
     playButton.mousePressed(togglePlay);
-    playButton.hide();  // Initially hidden, will show after song is loaded
 
-    // Dancer add button
-    addDancerButton = select('#addDancer');
-    addDancerButton.mousePressed(addDancer);
-
-    // Appearance options
-    skinColorPicker = select('#skinColor');
-    shirtColorPicker = select('#shirtColor');
-    pantsColorPicker = select('#pantsColor');
-    dancerSizePicker = select('#dancerSize');
-
-    // Set up file input for music
-    let input = document.getElementById('fileInput');
-    input.addEventListener('change', handleFileSelect, false);
+    // Load file input
+    let input = createFileInput(handleFileSelect);
+    input.position(10, 40);
 }
 
 function draw() {
     background(240);
 
-    // Draw the dancers
+    // Draw all dancers
     dancers.forEach(dancer => {
         dancer.display();
         dancer.move();
     });
 }
 
-// File select handler (for loading music)
-function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            song = loadSound(e.target.result, songLoaded);
-        };
-        reader.readAsDataURL(file);
+// Handle file selection for the audio
+function handleFileSelect(file) {
+    if (file.type === 'audio') {
+        song = loadSound(file.data, songLoaded);
     }
 }
 
-// Show play button after sound is loaded
+// Show the play button when the song is loaded
 function songLoaded() {
-    playButton.show();  // Show the play button when song is loaded
+    playButton.show();
 }
 
-// Play/Pause button toggle
+// Play/Pause the song
 function togglePlay() {
     if (song.isPlaying()) {
         song.pause();
@@ -68,54 +49,53 @@ function togglePlay() {
     }
 }
 
-// Add a dancer to the canvas
-function addDancer() {
-    let skinColor = skinColorPicker.value();
-    let shirtColor = shirtColorPicker.value();
-    let pantsColor = pantsColorPicker.value();
-    let size = dancerSizePicker.value();
-
-    dancers.push(new Dancer(200, 200, size, skinColor, shirtColor, pantsColor));
-}
-
-// Dancer class (with customizable appearance)
+// Dancer class to define a humanoid figure
 class Dancer {
-    constructor(x, y, size, skinColor, shirtColor, pantsColor) {
+    constructor(x, y, skinColor, shirtColor, pantsColor, size) {
         this.x = x;
         this.y = y;
-        this.size = size;
         this.skinColor = skinColor;
         this.shirtColor = shirtColor;
         this.pantsColor = pantsColor;
+        this.size = size;
         this.angle = 0;
     }
 
+    // Move the dancer in sync with the music
     move() {
-        // Sync movement with the song's current time
-        let beat = song.currentTime(); 
-        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
-
-        // Make the dancer move left and right
-        this.x = 300 + Math.sin(beat) * 150;
-        this.y = 200 + Math.cos(beat) * 50;
+        let beat = song.currentTime();
+        this.angle += 0.05 + (beat % 2) * 0.01;
+        this.x = 300 + Math.sin(this.angle) * 100;
+        this.y = 200 + Math.cos(this.angle) * 100;
     }
 
+    // Display the dancer
     display() {
-        fill(this.skinColor);  // Skin color
-        stroke(0);
+        push();  // Start a new drawing state
 
-        // Head
-        ellipse(this.x, this.y - this.size / 2, this.size / 2);
-
-        // Body
-        fill(this.shirtColor);  // Shirt color
+        // Draw the body (torso)
+        fill(this.shirtColor);
         rect(this.x - this.size / 4, this.y, this.size / 2, this.size);
 
-        // Legs (pants)
-        fill(this.pantsColor);  // Pants color
-        rect(this.x - this.size / 4, this.y + this.size, this.size / 4, this.size);
+        // Draw the legs
+        fill(this.pantsColor);
+        rect(this.x - this.size / 4, this.y + this.size, this.size / 4, this.size / 2);
+        rect(this.x, this.y + this.size, this.size / 4, this.size / 2);
 
-        // Arms
-        line(this.x - this.size / 2, this.y + this.size / 4, this.x + this.size / 2, this.y + this.size / 4);
+        // Draw the arms
+        line(this.x - this.size / 2, this.y + this.size / 2, this.x - this.size, this.y + this.size);  // Left arm
+        line(this.x + this.size / 2, this.y + this.size / 2, this.x + this.size, this.y + this.size);  // Right arm
+
+        // Draw the head
+        fill(this.skinColor);
+        ellipse(this.x, this.y - this.size / 2, this.size / 2);
+
+        pop();  // End the drawing state
     }
+}
+
+// Add dancers when 'Add Dancer' button is pressed
+function mousePressed() {
+    // Example of adding a dancer with default appearance
+    dancers.push(new Dancer(200, 200, "#F5CBA7", "#2980B9", "#1C2833", 50));
 }
