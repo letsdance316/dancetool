@@ -90,12 +90,14 @@ class Dancer {
     }
 
     move() {
-        let beat = song.currentTime(); 
-        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
+        if (song && song.isLoaded()) {  // Check if song is loaded
+            let beat = song.currentTime(); 
+            this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
 
-        // Make the dancer move left and right based on the song beat
-        this.x = 300 + Math.sin(beat) * 150;
-        this.y = 200 + Math.cos(beat) * 50;
+            // Make the dancer move left and right based on the song beat
+            this.x = 300 + Math.sin(beat) * 150;
+            this.y = 200 + Math.cos(beat) * 50;
+        }
     }
 
     display() {
