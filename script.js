@@ -5,28 +5,23 @@ let addDancerButton;
 let skinColorPicker, shirtColorPicker, pantsColorPicker, dancerSizePicker;
 
 function setup() {
-    // Create the canvas inside the 'danceCanvas' div
     let canvas = createCanvas(600, 400);
-    canvas.parent('danceCanvas');  // Attach canvas to the div
+    canvas.parent('danceCanvas');  // Attach the canvas to the div
     background(240);
 
-    // Play button
     playButton = createButton("Play");
-    playButton.position(10, 60);  // Adjusted position to make sure it's visible
+    playButton.position(10, 60);
     playButton.mousePressed(togglePlay);
     playButton.hide();  // Initially hidden, will show after song is loaded
 
-    // Dancer add button
     addDancerButton = select('#addDancer');
     addDancerButton.mousePressed(addDancer);
 
-    // Appearance options
     skinColorPicker = select('#skinColor');
     shirtColorPicker = select('#shirtColor');
     pantsColorPicker = select('#pantsColor');
     dancerSizePicker = select('#dancerSize');
 
-    // Set up file input for music
     let input = document.getElementById('fileInput');
     input.addEventListener('change', handleFileSelect, false);
 }
@@ -34,7 +29,6 @@ function setup() {
 function draw() {
     background(240);
 
-    // Draw the dancers
     dancers.forEach(dancer => {
         dancer.display();
         dancer.move();
@@ -92,9 +86,9 @@ class Dancer {
     }
 
     move() {
-        // Sync movement with the song's current time
-        let beat = song.currentTime(); 
-        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5; // Simple sway movement
+        if (!song) return; // Ensure song is loaded before calling currentTime
+        let beat = song.currentTime();  // Sync movement with the song's current time
+        this.angle = Math.sin(beat * 2 * Math.PI) * 0.5;  // Simple sway movement
 
         // Make the dancer move left and right
         this.x = 300 + Math.sin(beat) * 150;
@@ -102,7 +96,7 @@ class Dancer {
     }
 
     display() {
-        fill(this.skinColor);  // Skin color
+        fill(this.skinColor);
         stroke(0);
 
         // Head
